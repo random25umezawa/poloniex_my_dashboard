@@ -1,7 +1,9 @@
 <?php
 	require "php_poloniex.php";
 
-	$pnx = new poloniex("HLRGVRLP-ONAVCLIG-2WJSNC8A-3FESI9RQ","8fee8380a120a4f6d4eae8308555acd6ff87e95084908f84ec37a6b606a9fbced7d8dfc23aab4a1f1243c6ea960eb9344f73977b283a7473eefd843040955ee7");
+	$key_set = require("key_set.php");
+
+	$pnx = new poloniex($key_set["key"],$key_set["secret"]);
 
 	$trade_history = file_get_contents("data/trade_history.json");
 	$ticker = file_get_contents("data/ticker.json");
