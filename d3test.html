@@ -5,25 +5,33 @@
 	var width = 500;
 	var height = 300;
 
-	var dataset = [50,80,46];
+	var dataset = [3,14,15,92,65,35,89,79];
+	var dataLimitLine = [50,80,46];
 	var scale = d3.scaleLinear().domain([0,100]).range([0,height]);
+	var line = d3.line()
+		.x(function(d,i) {return i*width/dataset.length;})
+		.y(function(d,i) {return height-scale(d);})
+	;
 
 	function updateGraph() {
-		d3.select("#svgelement").selectAll("rect")
-			.data(dataset)
-			.enter()
-			.append("rect")
-		;
-		d3.select("#svgelement").selectAll("rect")
-			.data(dataset)
+		d3.select("#svgelement").selectAll("path")
 			.transition()
 			.delay(function(d,i) {return i*25})
 			.duration(500)
-			.attr("x",function(d,i){return i*width/dataset.length;})
-			.attr("y",function(d){return height-scale(d);})
-			.attr("width",width/dataset.length/2)
-			.attr("height",function(d){return scale(d);})
-			.attr("fill","#6fbadd")
+			.attr("d",line(dataset))
+			.attr("stroke","blue")
+			.attr("stroke-width",2)
+			.attr("fill","none")
+		;
+		d3.select("#svgelement").selectAll("line")
+			.data(dataLimitLine)
+			.attr("x1",0)
+			.attr("x2",width)
+			.attr("y1",function(d){return scale(d)})
+			.attr("y2",function(d){return scale(d)})
+			.attr("stroke","red")
+			.attr("stroke-width",3)
+		;
 	}
 	d3.select("body").selectAll("p")
 		.data(dataset)
@@ -33,6 +41,25 @@
 		.attr({style:"background-color:#456"});
 
 	$(document).ready(function() {
+		d3.select("#svgelement")
+			.append("path")
+		;
+		d3.select("#svgelement").selectAll("line")
+			.data(dataLimitLine)
+			.enter()
+			.append("line")
+			.on("mouseover",function(d) {
+				console.log(d);
+				console.log(this);
+				console.log(d3.select(this));
+				var myline = $(this);
+				console.log(myline.offset());
+				console.log(Number(myline.attr("x1"))+Number(myline.attr("x2")));
+			})
+			.on("mouseout",function(d) {
+				console.log(d+100);
+			})
+		;
 		resizeGraph();
 		var timer = setInterval(function() {
 			dataset.push((Math.random())*100);
