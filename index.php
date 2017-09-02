@@ -64,7 +64,7 @@
 	var recent_chart_data_div = $("#recent_chart_data");
 	for(var pair in recent_chart_data) {
 		var chart_div = $(`<div class="parts col-xl-4 col-md-6">`);
-		var chart_canvas = $(`<canvas style="width:100%;">`);
+		var chart_canvas = $(`<canvas style="width:100%; height:500px;">`);
 		chart_div.append(chart_canvas);
 		recent_chart_data_div.append(chart_div);
 		var chart_data = {labels:[],datasets:[]};
