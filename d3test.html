@@ -1,0 +1,60 @@
+<script src="plugin/d3.min.js"></script>
+<script src="plugin/jquery.min.js"></script>
+<svg id="svgelement" style="width:100%;"></svg>
+<script>
+	var width = 500;
+	var height = 300;
+
+	var dataset = [50,80,46];
+	var scale = d3.scaleLinear().domain([0,100]).range([0,height]);
+
+	function updateGraph() {
+		d3.select("#svgelement").selectAll("rect")
+			.data(dataset)
+			.enter()
+			.append("rect")
+		;
+		d3.select("#svgelement").selectAll("rect")
+			.data(dataset)
+			.transition()
+			.delay(function(d,i) {return i*25})
+			.duration(500)
+			.attr("x",function(d,i){return i*width/dataset.length;})
+			.attr("y",function(d){return height-scale(d);})
+			.attr("width",width/dataset.length/2)
+			.attr("height",function(d){return scale(d);})
+			.attr("fill","#6fbadd")
+	}
+	d3.select("body").selectAll("p")
+		.data(dataset)
+		.enter()
+		.append("p")
+		.text(function(d){return "Im "+d;})
+		.attr({style:"background-color:#456"});
+
+	$(document).ready(function() {
+		resizeGraph();
+		var timer = setInterval(function() {
+			dataset.push((Math.random())*100);
+			if(dataset.length>12) dataset.shift();
+			updateGraph();
+			//if(count>=100) clearInterval(timer);
+		},500);
+	});
+
+	var timer = 0;
+	$(window).resize(function() {
+		if(timer>0) clearTimeout(timer);
+		timer = setTimeout(function() {
+			resizeGraph();
+		},100)
+	});
+
+	function resizeGraph() {
+		var svgelement = $("#svgelement");
+		width = svgelement.width();
+		height = width*3/5;
+		svgelement.height(height);
+		updateGraph();
+	}
+</script>
